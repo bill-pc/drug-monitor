@@ -90,23 +90,28 @@ exports.update = (req,res)=>{
 
 
 // deletes a drug using its drug ID
-exports.delete = (req,res)=>{
-    const id = req.params.id;
+exports.delete = async(req, res) => {
+    try {
+        const id = req.params.id;
 
-    Drugdb.findByIdAndDelete(id)
-        .then(data => {
-            if(!data){
-                res.status(404).send({ message : `Cannot Delete drug with id: ${id}. Pls check id`})
-            }else{
-                res.send({
-                    message : `${data.name} was deleted successfully!`
-                })
-            }
-        })
-        .catch(err =>{
-            res.status(500).send({
-                message: "Could not delete Drug with id=" + id
-            });
+        if (!id) {
+            return res.status(400).json({ message: "Drug ID is required" });
+        }
+
+        const drug = await Drugdb.findByIdAndDelete(id);
+
+        if (!drug) {
+            return res.status(404).json({ message: `Drug with id ${id} not found` });
+        }
+
+        res.status(200).json({
+            message: `Drug "${drug.name}" was deleted successfully!`,
+            deletedDrug: drug
         });
-
-}
+    } catch (err) {
+        res.status(500).json({
+            message: `Error deleting drug with id ${req.params.id}`,
+            error: err.message
+        });
+    }
+};

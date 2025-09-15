@@ -4,6 +4,8 @@ const services = require('../services/render');//uses the render.js file from se
 
 const controller = require('../controller/controller');//uses the render.js file from services here
 
+// import middleware validateDrug
+const validateDrug = require('../../middleware/validateDrug');
 
 route.get('/', services.home);
 

@@ -84,12 +84,49 @@ if (window.location.pathname === "/manage") {
     });
 }
 
-// ================== PURCHASE ==================
-if (window.location.pathname === "/purchase") {
-    $("#drug_days").submit(function (event) {
-        event.preventDefault();
+if (window.location.pathname == "/purchase") {
+    //$("#purchase_table").hide();
+
+    $("#drug_days").submit(function (event) {//on a submit event
+        event.preventDefault();//prevent default submit behaviour
         $("#purchase_table").show();
         let days = +$("#days").val();
-        alert("Drugs for " + days + " days!");
-    });
+        alert("Drugs for " + days + " days!");//alert this in the browser
+
+        // 👉 sau khi hiển thị kết quả thì thêm nút "Buy"
+        if ($("#buyBtn").length === 0) {
+            $("#main").append('<button id="buyBtn">Buy</button>');
+        }
+
+        // Xử lý khi nhấn mua
+        $("#buyBtn").off("click").on("click", function () {
+            // Lấy dữ liệu từ bảng purchase_table
+            let purchaseList = [];
+            $("#purchase_table tbody tr").each(function () {
+                let id = $(this).find("td:eq(0)").text();
+                let name = $(this).find("td:eq(1)").text();
+                let cards = $(this).find("td:eq(2)").text();
+                let packs = $(this).find("td:eq(3)").text();
+
+                purchaseList.push({
+                    id, name, cards, packs
+                });
+            });
+
+            let request = {
+                url: `http://${url}/api/purchase`,  // dùng http thay vì https cho local
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ drugs: purchaseList })
+            };
+
+            $.ajax(request).done(function (response) {
+                alert("Purchase successful!");
+                console.log(response);
+            }).fail(function (err) {
+                alert("Purchase failed!");
+                console.error(err);
+            });
+        });
+    })
 }

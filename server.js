@@ -23,6 +23,27 @@ connectMongo();
 app.use('/',require('./server/routes/routes'));//Pulls the routes file whenever this is loaded
 
 
+// 404 - Page Not Found
+app.use((req, res, next) => {
+  res.status(404).render("error", {
+    title: "Page Not Found",
+    message: "The page you are looking for does not exist.",
+    status: 404,
+    stack: null // thêm stack = null để EJS không lỗi
+  });
+});
+
+// 500 - Internal Server Error
+app.use((err, req, res, next) => {
+  console.error(err.stack); // log chi tiết lỗi ra console
+  res.status(500).render("error", {
+    title: "Server Error",
+    message: err.message || "Something went wrong! Please try again later.",
+    status: 500,
+    stack: process.env.NODE_ENV === "development" ? err.stack : null
+  });
+});
+// ---------- End Error Handlers ----------
 app.listen(PORT, function() {//specifies port to listen on
 	console.log('listening on '+ PORT);
 	console.log(`Welcome to the Drug Monitor App at http://localhost:${PORT}`);

@@ -42,6 +42,34 @@
 		</tbody>
 	</table>
 </main>
+<!-- Script xử lý delete -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const deleteButtons = document.querySelectorAll(".delete");
+
+    deleteButtons.forEach(btn => {
+  btn.addEventListener("click", function() {
+    const id = this.getAttribute("data-id");
+
+    if (!confirm("Bạn có chắc muốn xóa thuốc này không?")) {
+      return; // nếu bấm Cancel thì thoát, không xóa
+    }
+
+    fetch(`/api/drugs/${id}`, { method: "DELETE" })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        this.closest("tr").remove();
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to delete drug!");
+      });
+  });
+});
+
+  });
+</script>
 <!-- End main section -->
 <!-- add footer -->
 <%- include('includes/_footer') %>

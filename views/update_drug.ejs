@@ -40,6 +40,49 @@
     </div>
 </form>
 </main>
+<!-- Xử lý update -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("update_drug");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const id = form.querySelector("input[name='id']").value;
+      const payload = {
+        name: form.querySelector("input[name='name']").value.trim(),
+        card: Number(form.querySelector("input[name='card']").value),
+        pack: Number(form.querySelector("input[name='pack']").value),
+        perDay: Number(form.querySelector("input[name='perDay']").value),
+        dosage: form.querySelector("input[name='dosage']").value.trim(),
+      };
+
+      try {
+        const res = await fetch(`/api/drugs/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          // Trả về lỗi từ middleware (validateDrug)
+          alert("Error: " + (data.message || "Validation failed"));
+          return;
+        }
+
+        alert(data.message || `${payload.name} updated successfully!`);
+        window.location.href = "/manage"; // quay về manager
+      } catch (err) {
+        console.error(err);
+        alert("Failed to update drug! Please try again.");
+      }
+    });
+  });
+</script>
+
+
 <!-- End main section -->
 <!-- add footer -->
 <%- include('includes/_footer') %>

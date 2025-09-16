@@ -31,6 +31,38 @@
 		</tbody>
 	</table>
 </main>
+
+<!-- Cập nhật số lượng thuốc cần mua khi nhấn Enter -->
+<script>
+  const drugs = <%- JSON.stringify(drugs) %>;
+
+  document.getElementById("drug_days").addEventListener("submit", function (e) {
+    e.preventDefault(); // không reload trang
+    const days = parseInt(document.getElementById("days").value) || 30;
+
+    const tbody = document.querySelector("#purchase_table tbody");
+    tbody.innerHTML = "";
+
+    drugs.forEach((drug, i) => {
+      const pills = days * drug.perDay; // tổng số viên cần uống
+      const cardsPerPack = drug.pack / drug.card; // số vỉ trong 1 hộp
+      const packsNeeded = Math.ceil(pills / drug.pack); // số hộp cần mua
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${drug.name}</td>
+        <td>
+          ${Math.ceil(pills / drug.card)} 
+          (${cardsPerPack} ${cardsPerPack < 2 ? "card" : "cards"} per pack)
+        </td>
+        <td>${packsNeeded}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+</script>
+
 <!-- End main section -->
 <!-- add footer -->
 <%- include('includes/_footer') %>

@@ -59,30 +59,30 @@ $("#update_drug").submit(function (event) {
         });
 });
 
-// ================== DELETE DRUG ==================
-if (window.location.pathname === "/manage") {
-    $("table tbody td a.delete").click(function () {
-        let id = $(this).attr("data-id");
+// // ================== DELETE DRUG ==================
+// if (window.location.pathname === "/manage") {
+//     $("table tbody td a.delete").click(function () {
+//         let id = $(this).attr("data-id");
 
-        if (confirm("Do you really want to delete this drug?")) {
-            $.ajax({
-                url: `http://${url}/api/drugs/${id}`,
-                method: "DELETE",
-            })
-                .done(function () {
-                    alert("Drug deleted successfully!");
-                    location.reload();
-                })
-                .fail(function (xhr) {
-                    let errMsg = "Something went wrong!";
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errMsg = xhr.responseJSON.message;
-                    }
-                    alert("Error: " + errMsg);
-                });
-        }
-    });
-}
+//         if (confirm("Do you really want to delete this drug?")) {
+//             $.ajax({
+//                 url: `http://${url}/api/drugs/${id}`,
+//                 method: "DELETE",
+//             })
+//                 .done(function () {
+//                     alert("Drug deleted successfully!");
+//                     location.reload();
+//                 })
+//                 .fail(function (xhr) {
+//                     let errMsg = "Something went wrong!";
+//                     if (xhr.responseJSON && xhr.responseJSON.message) {
+//                         errMsg = xhr.responseJSON.message;
+//                     }
+//                     alert("Error: " + errMsg);
+//                 });
+//         }
+//     });
+// }
 
 if (window.location.pathname == "/purchase") {
     //$("#purchase_table").hide();
